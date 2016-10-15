@@ -1,17 +1,16 @@
-# cpuminer-ZCash
+# cpuminer-zcash
 
-This is a multi-threaded CPU miner for ZCash equihash,
-fork of Jeff Garzik's reference cpuminer and pooler cpuminer.
+This is a multi-threaded CPU miner for ZCash equihash.
 
 Author: Davide Gessa
+
 License: GPLv2.  See COPYING for details.
 
-Downloads:  https://sourceforge.net/projects/cpuminer/files/
-Git tree:   https://github.com/pooler/cpuminer
+Git tree:   https://github.com/dakk/cpuminer-zcash
 
 Dependencies:
 	libcurl			http://curl.haxx.se/libcurl/
-	sodium
+	sodium 			https://github.com/jedisct1/libsodium
 	jansson			http://www.digip.org/jansson/
 		(jansson is included in-tree)
 
