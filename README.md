@@ -1,10 +1,12 @@
 # cpuminer-zcash
+A multi-threaded CPU miner for ZCash equihash.
 
-This is a multi-threaded CPU miner for ZCash equihash.
+*Author*: Davide Gessa
 
-Author: Davide Gessa
+*License*: GPLv2. See COPYING for details.
 
-License: GPLv2.  See COPYING for details.
+
+## Build
 
 Git tree:   https://github.com/dakk/cpuminer-zcash
 
@@ -35,29 +37,10 @@ Notes for AIX users:
 	* LIBCURL="-lcurldll" ./configure CFLAGS="-O3"
 	* make
 
-Architecture-specific notes:
-	ARM:	No runtime CPU detection. The miner can take advantage
-		of some instructions specific to ARMv5E and later processors,
-		but the decision whether to use them is made at compile time,
-		based on compiler-defined macros.
-		To use NEON instructions, add "-mfpu=neon" to CFLAGS.
-	PowerPC: No runtime CPU detection.
-		To use AltiVec instructions, add "-maltivec" to CFLAGS.
-	x86:	The miner checks for SSE2 instructions support at runtime,
-		and uses them if they are available.
-	x86-64:	The miner can take advantage of AVX, AVX2 and XOP instructions,
-		but only if both the CPU and the operating system support them.
-		    * Linux supports AVX starting from kernel version 2.6.30.
-		    * FreeBSD supports AVX starting with 9.1-RELEASE.
-		    * Mac OS X added AVX support in the 10.6.8 update.
-		    * Windows supports AVX starting from Windows 7 SP1 and
-		      Windows Server 2008 R2 SP1.
-		The configure script outputs a warning if the assembler
-		doesn't support some instruction sets. In that case, the miner
-		can still be built, but unavailable optimizations are left off.
-		The miner uses the VIA Padlock Hash Engine where available.
 
-Usage instructions:  Run "minerd --help" to see options.
+## Usage instructions
+
+Run "minerd --help" to see options.
 
 Connecting through a proxy:  Use the --proxy option.
 To use a SOCKS proxy, add a socks4:// or socks5:// prefix to the proxy host.

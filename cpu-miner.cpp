@@ -1,6 +1,7 @@
 /*
  * Copyright 2010 Jeff Garzik
  * Copyright 2012-2015 pooler
+ * Copyright 2016 Davide Gessa (dakk)
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
