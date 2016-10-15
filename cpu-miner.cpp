@@ -9,7 +9,6 @@
  */
 
 #include "cpuminer-config.h"
-#define _GNU_SOURCE
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,6 +36,7 @@
 #include <curl/curl.h>
 #include "compat.h"
 #include "miner.h"
+#include "equihash/equihash.h"
 
 #define PROGRAM_NAME		"minerd"
 #define LP_SCANTIME		60
@@ -101,15 +101,12 @@ struct workio_cmd {
 };
 
 enum algos {
-	ALGO_SCRYPT,		/* scrypt(1024,1,1) */
+	ALGO_EQUIHASH,		/* equihash */
 	ALGO_SHA256D,		/* SHA-256d */
 };
 
-static const char *algo_names[] = {
-	[ALGO_SCRYPT]		= "scrypt",
-	[ALGO_SHA256D]		= "sha256d",
-};
 
+algos opt_algo = ALGO_EQUIHASH;
 bool opt_debug = false;
 bool opt_protocol = false;
 static bool opt_benchmark = false;
@@ -128,8 +125,6 @@ static int opt_fail_pause = 30;
 int opt_timeout = 0;
 static int opt_scantime = 5;
 static const bool opt_time = true;
-static enum algos opt_algo = ALGO_SCRYPT;
-static int opt_scrypt_n = 1024;
 static int opt_n_threads;
 static int num_processors;
 static char *rpc_url;
@@ -170,8 +165,7 @@ static char const usage[] = "\
 Usage: " PROGRAM_NAME " [OPTIONS]\n\
 Options:\n\
   -a, --algo=ALGO       specify the algorithm to use\n\
-                          scrypt    scrypt(1024, 1, 1) (default)\n\
-                          scrypt:N  scrypt(N, 1, 1)\n\
+                          equihash	ZCash equihash\n\
                           sha256d   SHA-256d\n\
   -o, --url=URL         URL of mining server\n\
   -O, --userpass=U:P    username:password pair for mining server\n\
@@ -1054,8 +1048,8 @@ static void stratum_gen_work(struct stratum_ctx *sctx, struct work *work)
 		free(xnonce2str);
 	}
 
-	if (opt_algo == ALGO_SCRYPT)
-		diff_to_target(work->target, sctx->job.diff / 65536.0);
+	if (opt_algo == ALGO_EQUIHASH)
+		diff_to_target(work->target, sctx->job.diff / 65536.0); //TODO equihash
 	else
 		diff_to_target(work->target, sctx->job.diff);
 }
@@ -1088,14 +1082,6 @@ static void *miner_thread(void *userdata)
 		affine_to_cpu(thr_id, thr_id % num_processors);
 	}
 	
-	if (opt_algo == ALGO_SCRYPT) {
-		scratchbuf = scrypt_buffer_alloc(opt_scrypt_n);
-		if (!scratchbuf) {
-			applog(LOG_ERR, "scrypt buffer allocation failed");
-			pthread_mutex_lock(&applog_lock);
-			exit(1);
-		}
-	}
 
 	while (1) {
 		unsigned long hashes_done;
@@ -1148,8 +1134,9 @@ static void *miner_thread(void *userdata)
 		max64 *= thr_hashrates[thr_id];
 		if (max64 <= 0) {
 			switch (opt_algo) {
-			case ALGO_SCRYPT:
-				max64 = opt_scrypt_n < 16 ? 0x3ffff : 0x3fffff / opt_scrypt_n;
+			case ALGO_EQUIHASH:
+				max64 = 0x1fffff;
+				// TODO equihash max64 = opt_scrypt_n < 16 ? 0x3ffff : 0x3fffff / opt_scrypt_n;
 				break;
 			case ALGO_SHA256D:
 				max64 = 0x1fffff;
@@ -1166,9 +1153,10 @@ static void *miner_thread(void *userdata)
 
 		/* scan nonces for a proof-of-work hash */
 		switch (opt_algo) {
-		case ALGO_SCRYPT:
-			rc = scanhash_scrypt(thr_id, work.data, scratchbuf, work.target,
-			                     max_nonce, &hashes_done, opt_scrypt_n);
+		case ALGO_EQUIHASH:
+			/*rc = scanhash_scrypt(thr_id, work.data, scratchbuf, work.target,
+			                     max_nonce, &hashes_done, opt_scrypt_n);*/
+			// TODO equihash
 			break;
 
 		case ALGO_SHA256D:
@@ -1499,30 +1487,10 @@ static void parse_arg(int key, char *arg, char *pname)
 
 	switch(key) {
 	case 'a':
-		for (i = 0; i < ARRAY_SIZE(algo_names); i++) {
-			v = strlen(algo_names[i]);
-			if (!strncmp(arg, algo_names[i], v)) {
-				if (arg[v] == '\0') {
-					opt_algo = i;
-					break;
-				}
-				if (arg[v] == ':' && i == ALGO_SCRYPT) {
-					char *ep;
-					v = strtol(arg+v+1, &ep, 10);
-					if (*ep || v & (v-1) || v < 2)
-						continue;
-					opt_algo = i;
-					opt_scrypt_n = v;
-					break;
-				}
-			}
-		}
-		if (i == ARRAY_SIZE(algo_names)) {
-			fprintf(stderr, "%s: unknown algorithm -- '%s'\n",
-				pname, arg);
-			show_usage_and_exit(1);
-		}
-		break;
+		if (strcmp (arg, "equihash"))
+			opt_algo = ALGO_EQUIHASH;
+		else
+			opt_algo = ALGO_SHA256D;
 	case 'B':
 		opt_background = true;
 		break;
@@ -1957,9 +1925,8 @@ int main(int argc, char *argv[])
 	}
 
 	applog(LOG_INFO, "%d miner threads started, "
-		"using '%s' algorithm.",
-		opt_n_threads,
-		algo_names[opt_algo]);
+		"using algorithm.",
+		opt_n_threads);
 
 	/* main loop - simply wait for workio thread to exit */
 	pthread_join(thr_info[work_thr_id].pth, NULL);
