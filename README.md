@@ -1,6 +1,9 @@
-This is a multi-threaded CPU miner for Litecoin and Bitcoin,
-fork of Jeff Garzik's reference cpuminer.
+# cpuminer-ZCash
 
+This is a multi-threaded CPU miner for ZCash equihash,
+fork of Jeff Garzik's reference cpuminer and pooler cpuminer.
+
+Author: Davide Gessa
 License: GPLv2.  See COPYING for details.
 
 Downloads:  https://sourceforge.net/projects/cpuminer/files/
@@ -8,6 +11,7 @@ Git tree:   https://github.com/pooler/cpuminer
 
 Dependencies:
 	libcurl			http://curl.haxx.se/libcurl/
+	sodium
 	jansson			http://www.digip.org/jansson/
 		(jansson is included in-tree)
 
@@ -66,6 +70,3 @@ If no protocol is specified, the proxy is assumed to be a HTTP proxy.
 When the --proxy option is not used, the program honors the http_proxy
 and all_proxy environment variables.
 
-Also many issues and FAQs are covered in the forum thread
-dedicated to this program,
-	https://bitcointalk.org/index.php?topic=55038.0
