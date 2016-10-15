@@ -9,33 +9,31 @@ License: GPLv2.  See COPYING for details.
 Git tree:   https://github.com/dakk/cpuminer-zcash
 
 Dependencies:
-	libcurl			http://curl.haxx.se/libcurl/
-	sodium 			https://github.com/jedisct1/libsodium
-	jansson			http://www.digip.org/jansson/
-		(jansson is included in-tree)
+* libcurl			http://curl.haxx.se/libcurl/
+* sodium 			https://github.com/jedisct1/libsodium
+* jansson			http://www.digip.org/jansson/ (jansson is included in-tree)
 
 Basic *nix build instructions:
-	./autogen.sh	# only needed if building from git repo
-	./nomacro.pl	# only needed if building on Mac OS X or with Clang
-	./configure CFLAGS="-O3" # Make sure -O3 is an O and not a zero!
-	make
+1. ./autogen.sh	# only needed if building from git repo
+2. ./nomacro.pl	# only needed if building on Mac OS X or with Clang
+3. ./configure CFLAGS="-O3" # Make sure -O3 is an O and not a zero!
+4. make
 
 Notes for AIX users:
-	* To build a 64-bit binary, export OBJECT_MODE=64
-	* GNU-style long options are not supported, but are accessible
-	  via configuration file
+* To build a 64-bit binary, export OBJECT_MODE=64
+* GNU-style long options are not supported, but are accessible via configuration file
 
-Basic Windows build instructions, using MinGW:
-	Install MinGW and the MSYS Developer Tool Kit (http://www.mingw.org/)
-		* Make sure you have mstcpip.h in MinGW\include
-	If using MinGW-w64, install pthreads-w64
-	Install libcurl devel (http://curl.haxx.se/download.html)
-		* Make sure you have libcurl.m4 in MinGW\share\aclocal
-		* Make sure you have curl-config in MinGW\bin
-	In the MSYS shell, run:
-		./autogen.sh	# only needed if building from git repo
-		LIBCURL="-lcurldll" ./configure CFLAGS="-O3"
-		make
+## Mingw
+* Install MinGW and the MSYS Developer Tool Kit (http://www.mingw.org/)
+* Make sure you have mstcpip.h in MinGW\include
+* If using MinGW-w64, install pthreads-w64
+* Install libcurl devel (http://curl.haxx.se/download.html)
+	* Make sure you have libcurl.m4 in MinGW\share\aclocal
+	* Make sure you have curl-config in MinGW\bin
+* In the MSYS shell, run:
+	* ./autogen.sh	# only needed if building from git repo
+	* LIBCURL="-lcurldll" ./configure CFLAGS="-O3"
+	* make
 
 Architecture-specific notes:
 	ARM:	No runtime CPU detection. The miner can take advantage
