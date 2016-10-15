@@ -798,8 +798,3 @@ template bool Equihash<48,5>::OptimisedSolve(const eh_HashState& base_state,
                                              const std::function<bool(std::vector<unsigned char>)> validBlock,
                                              const std::function<bool(EhSolverCancelCheck)> cancelled);
 template bool Equihash<48,5>::IsValidSolution(const eh_HashState& base_state, std::vector<unsigned char> soln);
-
-
-int main () {
-	return 0;
-}

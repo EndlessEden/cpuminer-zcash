@@ -1,6 +1,5 @@
 AC_INIT([cpuminer], [2.4.5])
 
-AC_PROG_CXX
 
 AC_PREREQ([2.59c])
 AC_CANONICAL_SYSTEM
@@ -12,9 +11,10 @@ dnl Make sure anyone changing configure.ac/Makefile.am has a clue
 AM_MAINTAINER_MODE
 
 dnl Checks for programs
-AC_PROG_CC_C99
-AC_PROG_GCC_TRADITIONAL
-AM_PROG_CC_C_O
+#AC_PROG_CC_C99
+#AC_PROG_GCC_TRADITIONAL
+#AM_PROG_CC_C_O
+AC_PROG_CXX
 AM_PROG_AS
 AC_PROG_RANLIB
 

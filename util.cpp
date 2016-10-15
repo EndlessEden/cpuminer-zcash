@@ -9,7 +9,6 @@
  * any later version.  See COPYING for more details.
  */
 
-#define _GNU_SOURCE
 #include "cpuminer-config.h"
 
 #include <stdio.h>
@@ -261,7 +260,7 @@ static size_t resp_hdr_cb(void *ptr, size_t size, size_t nmemb, void *user_data)
 	tmp = memchr(ptr, ':', ptrlen);
 	if (!tmp || (tmp == ptr))	/* skip empty keys / blanks */
 		goto out;
-	slen = tmp - ptr;
+	slen = (void *) ((unsigned) tmp - (unsigned) ptr);
 	if ((slen + 1) == ptrlen)	/* skip key w/ no value */
 		goto out;
 	memcpy(key, ptr, slen);		/* store & nul term key */
@@ -843,12 +842,12 @@ bool stratum_socket_full(struct stratum_ctx *sctx, int timeout)
 
 static void stratum_buffer_append(struct stratum_ctx *sctx, const char *s)
 {
-	size_t old, new;
+	size_t old, neww;
 
 	old = strlen(sctx->sockbuf);
-	new = old + strlen(s) + 1;
-	if (new >= sctx->sockbuf_size) {
-		sctx->sockbuf_size = new + (RBUFSIZE - (new % RBUFSIZE));
+	neww = old + strlen(s) + 1;
+	if (neww >= sctx->sockbuf_size) {
+		sctx->sockbuf_size = neww + (RBUFSIZE - (neww % RBUFSIZE));
 		sctx->sockbuf = realloc(sctx->sockbuf, sctx->sockbuf_size);
 	}
 	strcpy(sctx->sockbuf + old, s);
