@@ -254,7 +254,7 @@ static inline void sha256d_prehash(uint32_t *S, const uint32_t *W)
 
 #ifdef EXTERN_SHA256
 
-void sha256d_ms(uint32_t *hash, uint32_t *W,
+extern "C" void sha256d_ms(uint32_t *hash, uint32_t *W,
 	const uint32_t *midstate, const uint32_t *prehash);
 
 #else
@@ -468,7 +468,7 @@ static inline void sha256d_ms(uint32_t *hash, uint32_t *W,
 
 #ifdef HAVE_SHA256_4WAY
 
-void sha256d_ms_4way(uint32_t *hash,  uint32_t *data,
+extern "C" void sha256d_ms_4way(uint32_t *hash,  uint32_t *data,
 	const uint32_t *midstate, const uint32_t *prehash);
 
 static inline int scanhash_sha256d_4way(int thr_id, uint32_t *pdata,
@@ -527,7 +527,7 @@ static inline int scanhash_sha256d_4way(int thr_id, uint32_t *pdata,
 
 #ifdef HAVE_SHA256_8WAY
 
-void sha256d_ms_8way(uint32_t *hash,  uint32_t *data,
+extern "C" void sha256d_ms_8way(uint32_t *hash,  uint32_t *data,
 	const uint32_t *midstate, const uint32_t *prehash);
 
 static inline int scanhash_sha256d_8way(int thr_id, uint32_t *pdata,
