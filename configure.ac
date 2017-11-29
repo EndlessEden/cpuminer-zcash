@@ -1,6 +1,5 @@
 AC_INIT([cpuminer], [2.4.5])
 
-
 AC_PREREQ([2.59c])
 AC_CANONICAL_SYSTEM
 AC_CONFIG_SRCDIR([cpu-miner.cpp])
@@ -11,12 +10,12 @@ dnl Make sure anyone changing configure.ac/Makefile.am has a clue
 AM_MAINTAINER_MODE
 
 dnl Checks for programs
-#AC_PROG_CC_C99
-#AC_PROG_GCC_TRADITIONAL
-#AM_PROG_CC_C_O
-AC_PROG_CXX
+AC_PROG_CC_C99
+AC_PROG_GCC_TRADITIONAL
+AM_PROG_CC_C_O
 AM_PROG_AS
 AC_PROG_RANLIB
+AC_PROG_CXX
 
 dnl Checks for header files
 AC_HEADER_STDC
@@ -106,6 +105,7 @@ AC_CHECK_LIB([pthread], [pthread_create], PTHREAD_LIBS="-lpthread",
     AC_CHECK_LIB([pthreadGC1], [pthread_create], PTHREAD_LIBS="-lpthreadGC1",
       AC_CHECK_LIB([pthreadGC], [pthread_create], PTHREAD_LIBS="-lpthreadGC"
 ))))
+AC_CHECK_LIB([sodium], [sodium_init], SODIUM_LIBS="-lsodium")
 
 AM_CONDITIONAL([WANT_JANSSON], [test x$request_jansson = xtrue])
 AM_CONDITIONAL([HAVE_WINDOWS], [test x$have_win32 = xtrue])
@@ -128,6 +128,7 @@ LIBCURL_CHECK_CONFIG(, 7.15.2, ,
 AC_SUBST(JANSSON_LIBS)
 AC_SUBST(PTHREAD_FLAGS)
 AC_SUBST(PTHREAD_LIBS)
+AC_SUBST(SODIUM_LIBS)
 AC_SUBST(WS2_LIBS)
 
 AC_CONFIG_FILES([
